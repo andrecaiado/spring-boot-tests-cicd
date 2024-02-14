@@ -20,7 +20,7 @@ jobs:
     - name: Compile
       run: |
         echo "Compiling the code"
-       ./mvnw clean install
+        ./mvnw compile
     - name: Test
       run: |
         echo "Running the tests"
