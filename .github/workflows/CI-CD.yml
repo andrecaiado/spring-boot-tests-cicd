@@ -61,7 +61,7 @@ jobs:
             context: .
             file: ./Dockerfile
             push: true
-            tags: ${{ github.event.repository.name }}:latest
+            tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
       - name: Deploy
         run: |
           echo "Deploying the app using ${{ github.event.repository.name }}:latest image"
