@@ -13,9 +13,6 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  TAG_VERSION: ${{ github.sha }}
-
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -26,6 +23,9 @@ jobs:
           if [ -n "${{ github.event.release.tag_name }}" ]; then
             echo "Setting TAG_VERSION to ${{ github.event.release.tag_name }}"
             echo "TAG_VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          else
+            echo "Setting TAG_VERSION to ${{ github.sha }}"
+            echo "TAG_VERSION=${{ github.sha }}" >> $GITHUB_ENV
           fi
   build:
     runs-on: ubuntu-latest
@@ -56,20 +56,20 @@ jobs:
       - name: Extract metadata (tags, labels) for Docker
         uses: docker/metadata-action@v3
         with:
-          images: ${{ github.event.repository.name }}:${TAG_VERSION}
+          images: ${{ github.event.repository.name }}:${{ needs.prepare.env.TAG_VERSION }}
       - name: Build and push image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${TAG_VERSION}
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.env.TAG_VERSION }}
   deploy:
     if: (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) ||
         (github.event_name == 'release' && github.event.action == 'published')
     runs-on: ubuntu-latest
-    needs: build
+    needs: [prepare, build]
     steps:
       - name: Deploy
         run: |
-          echo "Deploying the app using ${{ github.event.repository.name }}:${TAG_VERSION} image"
+          echo "Deploying the app using ${{ github.event.repository.name }}:${{ needs.prepare.env.TAG_VERSION }} image"
