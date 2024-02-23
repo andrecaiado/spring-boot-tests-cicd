@@ -20,11 +20,12 @@ jobs:
       - name: set tag version
         shell: bash
         run: |
-          if [ ${{ github.event_name }} == 'published' ]; then
-            echo "export TAG_VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          if [[ ${{ github.event_name }} == 'published' ]]; then
+            echo "TAG_VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
           else
-            echo "export TAG_VERSION=latest" >> $GITHUB_ENV
+            echo "TAG_VERSION=latest" >> $GITHUB_ENV
           fi
+          echo
   build:
     runs-on: ubuntu-latest
     steps:
@@ -56,7 +57,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ env.TAG_VERSION }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:$TAG_VERSION
   deploy:
     if: (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) ||
         (github.event_name == 'release' && github.event.action == 'published')
@@ -65,4 +66,4 @@ jobs:
     steps:
       - name: Deploy
         run: |
-          echo "Deploying the app using ${{ github.event.repository.name }}:${{ env.TAG_VERSION }} image"
+          echo "Deploying the app using ${{ github.event.repository.name }}:$TAG_VERSION image"
