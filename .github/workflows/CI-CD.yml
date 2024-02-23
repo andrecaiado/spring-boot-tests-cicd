@@ -15,7 +15,12 @@ concurrency:
 
 env:
   TAG_VERSION: >-
-    if [ -n "${{ github.event.release.tag_name }}" ]; then echo "${{ github.event.release.tag_name }}"; else echo "latest"; fi
+    ${{
+      github.event_name == 'published' &&
+        github.event.release.tag_name
+      ||
+        'latest'
+    }}
 
 jobs:
 #  prepare:
