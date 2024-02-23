@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set TAG_VERSION
+        id: set-tag-version
         shell: bash
         run: |
           if [ -n "${{ github.event.release.tag_name }}" ]; then
@@ -56,14 +57,14 @@ jobs:
       - name: Extract metadata (tags, labels) for Docker
         uses: docker/metadata-action@v3
         with:
-          images: ${{ github.event.repository.name }}:${{ needs.prepare.env.TAG_VERSION }}
+          images: ${{ github.event.repository.name }}:${{ needs.prepare.set-tag-version.env.TAG_VERSION }}
       - name: Build and push image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.env.TAG_VERSION }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.set-tag-version.env.TAG_VERSION }}
   deploy:
     if: (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) ||
         (github.event_name == 'release' && github.event.action == 'published')
@@ -72,4 +73,4 @@ jobs:
     steps:
       - name: Deploy
         run: |
-          echo "Deploying the app using ${{ github.event.repository.name }}:${{ needs.prepare.env.TAG_VERSION }} image"
+          echo "Deploying the app using ${{ github.event.repository.name }}:${{ needs.prepare.set-tag-version.env.TAG_VERSION }} image"
