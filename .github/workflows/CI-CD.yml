@@ -14,14 +14,20 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  TAG_VERSION: >-
-    if [ "${{ github.event_name }}" = 'published' ]; then
-      echo "${{ github.event.release.tag_name }}"
-    else
-      echo "${{ github.sha }}"
-    fi
+  TAG_VERSION: ${{ github.sha }}
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set TAG_VERSION
+        shell: bash
+        run: |
+          if [ -n "${{ github.event.release.tag_name }}" ]; then
+            echo "Setting TAG_VERSION to ${{ github.event.release.tag_name }}"
+            echo "TAG_VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          fi
+          # echo "TAG_VERSION=${{ env.TAG_VERSION }}" >> $GITHUB_ENV
   build:
     runs-on: ubuntu-latest
     steps:
