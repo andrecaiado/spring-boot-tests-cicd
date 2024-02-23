@@ -21,9 +21,9 @@ jobs:
         shell: bash
         run: |
           if [[ ${{ github.event_name }} == 'published' ]]; then
-            echo "TAG_VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+            echo "TAG_VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
           else
-            echo "TAG_VERSION=latest" >> $GITHUB_OUTPUT
+            echo "TAG_VERSION=latest" >> $GITHUB_ENV
           fi
           echo "$TAG_VERSION"
   build:
@@ -58,7 +58,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.outputs.TAG_VERSION }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.env.TAG_VERSION }}
   deploy:
     if: (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) ||
         (github.event_name == 'release' && github.event.action == 'published')
@@ -67,4 +67,4 @@ jobs:
     steps:
       - name: Deploy
         run: |
-          echo "Deploying the app using ${{ github.event.repository.name }}:${{ needs.prepare.outputs.TAG_VERSION }} image"
+          echo "Deploying the app using ${{ github.event.repository.name }}:${{ needs.prepare.env.TAG_VERSION }} image"
