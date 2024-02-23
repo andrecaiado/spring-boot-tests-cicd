@@ -69,7 +69,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ env.TAG_VERSION }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}
   deploy:
     if: (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) ||
         (github.event_name == 'release' && github.event.action == 'published')
