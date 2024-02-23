@@ -19,7 +19,7 @@ env:
       github.event_name == 'published' &&
         github.event.release.tag_name
       ||
-        'cenas'
+        github.sha
     }}
 
 jobs:
