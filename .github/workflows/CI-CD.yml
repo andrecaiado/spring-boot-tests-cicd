@@ -13,16 +13,13 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  TAG_VERSION: ${{ github.event.release.tag_name || github.sha }}
-
 jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
       tag_version: ${{ steps.set-tag-version.outputs.TAG_VERSION }}
     steps:
-      - name: Set TAG_VERSION
+      - name: Set tag version
         id: set-tag-version
         shell: bash
         run: |
