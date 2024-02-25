@@ -19,8 +19,8 @@ jobs:
     outputs:
       tag_version: ${{ steps.set-tag-version.outputs.TAG_VERSION }}
       push_image: ${{ steps.set-push-image.outputs.PUSH_IMAGE }}
-      deploy: ${{ steps.set-push-image.outputs.DEPLOY }}
-      environment: ${{ steps.set-push-image.outputs.ENVIRONMENT }}
+      deploy: ${{ steps.set-deploy.outputs.DEPLOY }}
+      environment: ${{ steps.set-deploy.outputs.ENVIRONMENT }}
     steps:
       - name: Set tag version
         id: set-tag-version
