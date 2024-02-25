@@ -19,8 +19,8 @@ jobs:
     outputs:
       tag_version: ${{ steps.set-tag-version.outputs.TAG_VERSION }}
       push_image: ${{ steps.set-push-image.outputs.PUSH_IMAGE }}
-      deploy: ${{ steps.set-push-image.outputs.DEPLOY }}
-      environment: ${{ steps.set-push-image.outputs.ENVIRONMENT }}
+      deploy: ${{ steps.set-deploy.outputs.DEPLOY }}
+      environment: ${{ steps.set-deploy.outputs.ENVIRONMENT }}
     steps:
       - name: Set tag version
         id: set-tag-version
@@ -109,7 +109,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [prepare, build-and-test, build-image-push]
-    if: ${{ needs.prepare.outputs.deploy == true }}
+    if: ${{ needs.prepare.outputs.deploy == 'true' }}
     steps:
       - name: Deploy
         run: |
