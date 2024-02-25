@@ -37,7 +37,7 @@ The workflow file is located at [.github/workflows/ci-cd.yml](.github/workflows/
 
 The workflow is divided into the following jobs:
 
-![workflow.png](src%2Fmain%2Fresources%2Fworkflow.png)
+![workflows.png](src%2Fmain%2Fresources%2Fworkflows.png)
 
 #### Prepare
 
