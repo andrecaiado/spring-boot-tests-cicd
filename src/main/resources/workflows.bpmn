@@ -36,6 +36,7 @@
     <bpmn:subProcess id="Activity_12ylalu" name="Prepare">
       <bpmn:incoming>Flow_0zl3gcy</bpmn:incoming>
       <bpmn:incoming>Flow_10m4vud</bpmn:incoming>
+      <bpmn:incoming>Flow_0rnvvxt</bpmn:incoming>
       <bpmn:outgoing>Flow_0yya1ly</bpmn:outgoing>
       <bpmn:startEvent id="Event_0v8u3nm" name="Start">
         <bpmn:outgoing>Flow_1suubr2</bpmn:outgoing>
@@ -153,6 +154,10 @@ Else tag_version = commit sha</bpmn:text>
       <bpmn:sequenceFlow id="Flow_0egl0mf" sourceRef="Activity_0ir3tpe" targetRef="Activity_07i2yzw" />
       <bpmn:sequenceFlow id="Flow_0iq1w7k" name="No" sourceRef="Gateway_0bqj2fc" targetRef="Event_0a9ayg9" />
     </bpmn:subProcess>
+    <bpmn:startEvent id="Event_1qkndvx" name="Release is created">
+      <bpmn:outgoing>Flow_0rnvvxt</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0rnvvxt" sourceRef="Event_1qkndvx" targetRef="Activity_12ylalu" />
     <bpmn:group id="Group_08z1wvn" categoryValueRef="CategoryValue_0y3d2ns" />
   </bpmn:process>
   <bpmn:category id="Category_1al7lb9">
@@ -190,6 +195,12 @@ Else tag_version = commit sha</bpmn:text>
         <dc:Bounds x="885" y="152" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="889" y="128" width="41" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1qkndvx_di" bpmnElement="Event_1qkndvx">
+        <dc:Bounds x="179" y="372" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="171" y="415" width="52" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1uwiga4_di" bpmnElement="Activity_12ylalu">
@@ -246,6 +257,12 @@ Else tag_version = commit sha</bpmn:text>
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1033" y="229" width="15" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rnvvxt_di" bpmnElement="Flow_0rnvvxt">
+        <di:waypoint x="215" y="390" />
+        <di:waypoint x="390" y="390" />
+        <di:waypoint x="390" y="177" />
+        <di:waypoint x="450" y="177" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Group_08z1wvn_di" bpmnElement="Group_08z1wvn">
         <dc:Bounds x="420" y="80" width="700" height="210" />
