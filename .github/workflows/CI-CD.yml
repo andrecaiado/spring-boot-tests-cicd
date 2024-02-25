@@ -107,9 +107,9 @@ jobs:
           push: ${{ needs.prepare.outputs.push_image }}
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.outputs.tag_version }}
   deploy:
-    if: ${{ needs.prepare.outputs.deploy == true }}
     runs-on: ubuntu-latest
     needs: [prepare, build-and-test, build-image-push]
+    if: ${{ needs.prepare.outputs.deploy == true }}
     steps:
       - name: Deploy
         run: |
