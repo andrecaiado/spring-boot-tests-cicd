@@ -36,8 +36,8 @@ jobs:
         id: set-push-image
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" && "${{ github.event.action }}" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ] || 
-              [ "${{ github.event_name }}" == "release" && "${{ github.event.action }}" == "published" ]; then
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.action }}" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ]] || 
+              [[ "${{ github.event_name }}" == "release" && "${{ github.event.action }}" == "published" ]]; then
             echo "PUSH_IMAGE=true" >> "$GITHUB_OUTPUT"
           else
             echo "PUSH_IMAGE=false" >> "$GITHUB_OUTPUT"
@@ -46,8 +46,8 @@ jobs:
         id: set-deploy
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" && "${{ github.event.action }}" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ] || 
-              [ "${{ github.event_name }}" == "release" && "${{ github.event.action }}" == "published" ]; then
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.action }}" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ]] || 
+              [[ "${{ github.event_name }}" == "release" && "${{ github.event.action }}" == "published" ]]; then
             echo "DEPLOY=true" >> "$GITHUB_OUTPUT"
           else
             echo "DEPLOY=false" >> "$GITHUB_OUTPUT"
