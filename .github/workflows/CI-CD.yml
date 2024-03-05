@@ -7,6 +7,8 @@ on:
       - main
   release:
     types: [published]
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.ref }}
@@ -21,14 +23,6 @@ jobs:
       deploy: ${{ steps.set-deploy.outputs.DEPLOY }}
       environment: ${{ steps.set-deploy.outputs.ENVIRONMENT }}
     steps:
-      - name: Validate release branch
-        if: github.event_name == 'release'
-        shell: bash
-        run: |
-          if [[ "${{ github.ref }}" != "refs/heads/main" ]]; then
-            echo "Release branch is not main"
-            exit 1
-          fi
       - name: Set tag version
         id: set-tag-version
         shell: bash
