@@ -24,9 +24,9 @@ jobs:
       environment: ${{ steps.set-deploy.outputs.ENVIRONMENT }}
     steps:
       - name: Validate release target branch
+        if: ${{ github.event_name == 'release' }}
         run: |
-          echo ${{ github.event.release.target_commitish }}
-          if [[ "${{ github.event_name }}" == "release" && "${{ github.event.release.target_commitish }}" != "main" ]]; then
+          if [[ "${{ github.event.release.target_commitish }}" != "main" ]]; then
             echo "Release target branch is not main"
             exit 1
           fi
