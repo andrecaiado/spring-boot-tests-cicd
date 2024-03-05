@@ -7,8 +7,6 @@ on:
       - main
   release:
     types: [published]
-    branches:
-      - main
 
 concurrency:
   group: ${{ github.ref }}
