@@ -90,13 +90,14 @@ jobs:
           ./mvnw test
       - name: Add coverage to PR
         id: jacoco
-        uses: madrapps/jacoco-report@v1.6.1
+        uses: madrapps/jacoco-report@v1.5
         with:
           paths: |
             ${{ github.workspace }}/target/site/jacoco/jacoco.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 40
           min-coverage-changed-files: 60
+          title: Coverage report
   build-image-push:
     runs-on: ubuntu-latest
     needs: [prepare, build-and-test]
