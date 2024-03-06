@@ -90,7 +90,7 @@ jobs:
           ./mvnw test
       - name: Add coverage to PR
         id: jacoco
-        uses: madrapps/jacoco-report@v1.6.1
+        uses: madrapps/jacoco-report@v1.5
         with:
           paths: |
             ${{ github.workspace }}/target/site/jacoco/jacoco.xml
