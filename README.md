@@ -4,6 +4,8 @@ The main purpose of this repository is to demonstrate how to set up a CI/CD work
 
 The application used is a simple Spring Boot application with a REST controller and a test class.
 
+Test
+
 ## Workflows
 
 There are two workflows in this repository:
