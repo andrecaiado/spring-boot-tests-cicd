@@ -130,7 +130,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [prepare, build-image-push]
-    if: ${{ needs.prepare.outputs.deploy == 'true' }}
+    if: needs.prepare.outputs.deploy != 'false'
     steps:
       - name: Deploy
         run: |
