@@ -62,7 +62,7 @@ jobs:
             echo "Setting ENVIRONMENT to staging"
             echo "DEPLOY=true" >> "$GITHUB_OUTPUT"
             echo "ENVIRONMENT=STAGING" >> "$GITHUB_OUTPUT"
-          elif [[ ${{env.release_published}} ]]; then
+          elif [[ ${{env.release_published}} == true ]]; then
             echo "Setting DEPLOY to true"
             echo "Setting ENVIRONMENT to production"
             echo "DEPLOY=true" >> "$GITHUB_OUTPUT"
