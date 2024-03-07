@@ -12,6 +12,10 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  PR_MERGED: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged == true }}
+  RELEASE_PUBLISHED: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -20,9 +24,6 @@ jobs:
       push_image: ${{ steps.set-push-image.outputs.PUSH_IMAGE }}
       deploy: ${{ steps.set-deploy.outputs.DEPLOY }}
       environment: ${{ steps.set-deploy.outputs.ENVIRONMENT }}
-    env:
-      pr_merged: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged == true }}
-      release_published: ${{ github.event_name == 'release' && github.event.action == 'published' }}
     steps:
       - name: Validate release target branch
         if: ${{ github.event_name == 'release' }}
@@ -46,7 +47,7 @@ jobs:
         id: set-push-image
         shell: bash
         run: |
-          if [[ ${{env.pr_merged}} == true || ${{env.release_published}} == true ]]; then
+          if [[ $PR_MERGED == true || $RELEASE_PUBLISHED == true ]]; then
             echo "Setting PUSH_IMAGE to true"
             echo "PUSH_IMAGE=true" >> "$GITHUB_OUTPUT"
           else
@@ -57,12 +58,12 @@ jobs:
         id: set-deploy
         shell: bash
         run: |
-          if [[ ${{env.pr_merged}} == true ]]; then
+          if [[ $PR_MERGED == true ]]; then
             echo "Setting DEPLOY to true"
             echo "Setting ENVIRONMENT to staging"
             echo "DEPLOY=true" >> "$GITHUB_OUTPUT"
             echo "ENVIRONMENT=STAGING" >> "$GITHUB_OUTPUT"
-          elif [[ ${{env.release_published}} == true ]]; then
+          elif [[ $RELEASE_PUBLISHED == true ]]; then
             echo "Setting DEPLOY to true"
             echo "Setting ENVIRONMENT to production"
             echo "DEPLOY=true" >> "$GITHUB_OUTPUT"
@@ -130,7 +131,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [prepare, build-image-push]
-    if: always() && ${{ needs.prepare.outputs.deploy == 'true' }}
+    if: $PR_MERGED || $RELEASE_PUBLISHED
     steps:
       - name: Deploy
         run: |
