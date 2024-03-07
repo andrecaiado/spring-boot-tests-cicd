@@ -46,7 +46,7 @@ jobs:
         id: set-push-image
         shell: bash
         run: |
-          if [[ ${{env.pr_merged}} || ${{env.release_published}} ]]; then
+          if [[ ${{env.pr_merged}} == true || ${{env.release_published}} == true ]]; then
             echo "Setting PUSH_IMAGE to true"
             echo "PUSH_IMAGE=true" >> "$GITHUB_OUTPUT"
           else
@@ -57,7 +57,7 @@ jobs:
         id: set-deploy
         shell: bash
         run: |
-          if [[ ${{env.pr_merged}} ]]; then
+          if [[ ${{env.pr_merged}} == true ]]; then
             echo "Setting DEPLOY to true"
             echo "Setting ENVIRONMENT to staging"
             echo "DEPLOY=true" >> "$GITHUB_OUTPUT"
