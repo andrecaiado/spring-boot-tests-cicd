@@ -21,8 +21,8 @@ jobs:
       deploy: ${{ steps.set-deploy.outputs.DEPLOY }}
       environment: ${{ steps.set-deploy.outputs.ENVIRONMENT }}
     env:
-      pr_merged: ${{ github.event.pull_request.merged }} == 'true' && ${{ github.event_name }} == 'pull_request'
-      release_published: ${{ github.event.action }} == 'published' && ${{ github.event_name }} == 'release'
+      pr_merged: [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]]
+      release_published: [[ "${{ github.event_name }}" == "release" && "${{ github.event.action }}" == "published" ]]
     steps:
       - name: Validate release target branch
         if: ${{ github.event_name == 'release' }}
