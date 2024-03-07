@@ -20,6 +20,9 @@ jobs:
       push_image: ${{ steps.set-push-image.outputs.PUSH_IMAGE }}
       deploy: ${{ steps.set-deploy.outputs.DEPLOY }}
       environment: ${{ steps.set-deploy.outputs.ENVIRONMENT }}
+    env:
+      pr_merged: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged == 'true' }}
+      release_published: ${{ github.event_name == 'release' && github.event.action == 'published' }}
     steps:
       - name: Validate release target branch
         if: ${{ github.event_name == 'release' }}
@@ -43,8 +46,7 @@ jobs:
         id: set-push-image
         shell: bash
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]] || 
-              [[ "${{ github.event_name }}" == "release" && "${{ github.event.action }}" == "published" ]]; then
+          if [[ ${{env.pr_merged}} == true || ${{env.release_published}} == true ]]; then
             echo "Setting PUSH_IMAGE to true"
             echo "PUSH_IMAGE=true" >> "$GITHUB_OUTPUT"
           else
@@ -55,12 +57,12 @@ jobs:
         id: set-deploy
         shell: bash
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
+          if [[ ${{env.pr_merged}} == true ]]; then
             echo "Setting DEPLOY to true"
             echo "Setting ENVIRONMENT to staging"
             echo "DEPLOY=true" >> "$GITHUB_OUTPUT"
             echo "ENVIRONMENT=STAGING" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ github.event_name }}" == "release" && "${{ github.event.action }}" == "published" ]]; then
+          elif [[ ${{env.release_published}} == true ]]; then
             echo "Setting DEPLOY to true"
             echo "Setting ENVIRONMENT to production"
             echo "DEPLOY=true" >> "$GITHUB_OUTPUT"
