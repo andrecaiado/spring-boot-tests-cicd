@@ -2,13 +2,11 @@ name: CI/CD
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened]
     branches:
       - main
   release:
     types: [published]
-    branches:
-      - main
 
 concurrency:
   group: ${{ github.ref }}
@@ -45,7 +43,7 @@ jobs:
         id: set-push-image
         shell: bash
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.action }}" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ]] || 
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]] || 
               [[ "${{ github.event_name }}" == "release" && "${{ github.event.action }}" == "published" ]]; then
             echo "Setting PUSH_IMAGE to true"
             echo "PUSH_IMAGE=true" >> "$GITHUB_OUTPUT"
@@ -57,7 +55,7 @@ jobs:
         id: set-deploy
         shell: bash
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.action }}" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
             echo "Setting DEPLOY to true"
             echo "Setting ENVIRONMENT to staging"
             echo "DEPLOY=true" >> "$GITHUB_OUTPUT"
@@ -72,6 +70,7 @@ jobs:
             echo "DEPLOY=false" >> "$GITHUB_OUTPUT"
           fi
   build-and-test:
+    if: ${{ github.event_name }} != 'release'
     runs-on: ubuntu-latest
     needs: prepare
     steps:
@@ -90,6 +89,18 @@ jobs:
         run: |
           echo "Running the tests"
           ./mvnw test
+      - name: Add coverage to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.5
+        with:
+          paths: |
+            ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 40
+          min-coverage-changed-files: 60
+          title: Coverage report
+          comment: true
+          only-changed-files: true
   build-image-push:
     runs-on: ubuntu-latest
     needs: [prepare, build-and-test]
@@ -116,7 +127,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.outputs.tag_version }}
   deploy:
     runs-on: ubuntu-latest
-    needs: [prepare, build-and-test, build-image-push]
+    needs: [prepare, build-image-push]
     if: ${{ needs.prepare.outputs.deploy == 'true' }}
     steps:
       - name: Deploy
