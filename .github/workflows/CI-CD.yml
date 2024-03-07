@@ -2,7 +2,7 @@ name: CI/CD
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened]
     branches:
       - main
   release:
@@ -43,7 +43,7 @@ jobs:
         id: set-push-image
         shell: bash
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.action }}" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ]] || 
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]] || 
               [[ "${{ github.event_name }}" == "release" && "${{ github.event.action }}" == "published" ]]; then
             echo "Setting PUSH_IMAGE to true"
             echo "PUSH_IMAGE=true" >> "$GITHUB_OUTPUT"
@@ -55,7 +55,7 @@ jobs:
         id: set-deploy
         shell: bash
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.action }}" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
             echo "Setting DEPLOY to true"
             echo "Setting ENVIRONMENT to staging"
             echo "DEPLOY=true" >> "$GITHUB_OUTPUT"
@@ -70,6 +70,7 @@ jobs:
             echo "DEPLOY=false" >> "$GITHUB_OUTPUT"
           fi
   build-and-test:
+    if: ${{ github.event_name }} != 'release'
     runs-on: ubuntu-latest
     needs: prepare
     steps:
