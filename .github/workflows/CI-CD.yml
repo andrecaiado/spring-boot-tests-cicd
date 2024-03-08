@@ -134,7 +134,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [prepare, build-image-push]
-    if: env.RELEASE_PUBLISHED == true
+    if: ${{ env.RELEASE_PUBLISHED == true }}
     steps:
       - name: Deploy
         run: |
