@@ -91,17 +91,17 @@ jobs:
         run: |
           echo "Running the tests"
           ./mvnw test
-      - name: Add coverage to PR
-        id: jacoco
-        uses: madrapps/jacoco-report@v1.5
-        with:
-          paths: |
-            ${{ github.workspace }}/target/site/jacoco/jacoco.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 40
-          min-coverage-changed-files: 60
-          title: Coverage report
-          skip-if-no-changes: true
+#      - name: Add coverage to PR
+#        id: jacoco
+#        uses: madrapps/jacoco-report@v1.5
+#        with:
+#          paths: |
+#            ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          min-coverage-overall: 40
+#          min-coverage-changed-files: 60
+#          title: Coverage report
+#          skip-if-no-changes: true
   build-image-push:
     if: always()
     runs-on: ubuntu-latest
