@@ -4,8 +4,6 @@ The main purpose of this repository is to demonstrate how to set up a CI/CD work
 
 The application used is a simple Spring Boot application with a REST controller and a test class.
 
-Test
-
 ## Workflows
 
 There are two workflows in this repository:
@@ -29,10 +27,10 @@ This workflow is responsible for:
  - Building a Docker image and pushing it to Docker Hub.
  - Deploying the application to an environment.
 
-The following use cases/events were considered:
-- A Pull Request is opened, edited, synchronize, reopened or closed.
+The workflow is triggered when one of the following events occurs:
+- A Pull Request is opened, synchronized, reopened or closed.
 - A commit is pushed to a Pull Request.
-- A Pull Request is merged to the main branch.
+- A Pull Request is merged to the branch `main`.
 - A new release is published.
 
 The workflow file is located at [.github/workflows/ci-cd.yml](.github/workflows/ci-cd.yml).
@@ -49,6 +47,12 @@ The workflow is divided into the following jobs:
 
 ![build-and-test.png](src%2Fmain%2Fresources%2Fbuild-and-test.png)
 
+The code coverage is executed with JaCoCo maven plugin and the report is generated with [JaCoCo Report](https://github.com/marketplace/actions/jacoco-report).
+
 #### Build image and push
 
 ![build-image-and-push.png](src%2Fmain%2Fresources%2Fbuild-image-push.png)
+
+#### Deploy
+
+TODO
