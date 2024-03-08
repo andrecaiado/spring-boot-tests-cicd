@@ -39,8 +39,8 @@ jobs:
             echo "Setting TAG_VERSION to ${{ github.event.release.tag_name }}"
             echo "TAG_VERSION=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
           else
-            echo "Setting TAG_VERSION to ${{ github.sha::8 }}"
-            echo "TAG_VERSION=${{ github.sha::8 }}" >> "$GITHUB_OUTPUT"
+            echo "Setting TAG_VERSION to $("${{ github.sha }}".SubString(0, 8))
+            echo "TAG_VERSION=$("${{ github.sha }}".SubString(0, 8))" >> "$GITHUB_OUTPUT"
           fi
       - name: Set push image
         id: set-push-image
