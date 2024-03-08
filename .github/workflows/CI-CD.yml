@@ -72,7 +72,7 @@ jobs:
             echo "DEPLOY=false" >> "$GITHUB_OUTPUT"
           fi
   build-and-test:
-    if: always() && github.event_name != 'release'
+    if: github.event_name != 'release'
     runs-on: ubuntu-latest
     needs: prepare
     steps:
@@ -130,7 +130,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [prepare, build-image-push]
-    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+    if: always() && (needs.build-image-push.result == 'success' && needs.prepare.outputs.deploy == 'true')
     steps:
       - name: Deploy
         run: |
