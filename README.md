@@ -55,4 +55,33 @@ The code coverage is executed with JaCoCo maven plugin and the report is generat
 
 #### Deploy
 
-TODO
+The application is deployed in an AWS EC2 instance using SSH.
+
+In order to authenticate the SSH connection, a private key is needed and so, it was created in AWS and stored as a secret in the repository.
+The secrets used in the workflow are:
+- `DOCKER_USERNAME` and `DOCKER_PASSWORD` to authenticate in Docker Hub.
+- `AWS_EC2_USERNAME`, `AWS_EC2_IPADDRESS` and `AWS_EC2_PRIVATE_KEY` to connect to the EC2 instance.
+
+__Note:__ Each time the instance is stopped and started, the EC2 instance public IP address changes and we need to update the `AWS_EC2_IPADDRESS` secret. To avoid this, an Elastic IP could have been used but for now, it was not implemented.
+
+The deploy job has the following steps:
+- Login to Docker Hub.
+- Sets permissions to the private key file that is going to be used to authenticate SSH connection.
+- The following steps are then executed inside the EC2 instance (connected via SSH):
+  - Pull the new image.
+  - Stop the running container (by container name).
+  - Remove the container (by container name).
+  - Run the new container.
+
+Containers are named with the following pattern: `spring-boot-tests-cicd-<environment>`.
+
+![containers.png](src%2Fmain%2Fresources%2Fcontainers.png)
+
+The environment variable value is added to the container as an environment variable in the `run` command. It can be `STAGING` or `PRODUCTION`.
+
+The application will load the environment variable and use the value in the `/api/greeting` endpoint to present a message with the environment name.
+
+![hello-stag.png](src%2Fmain%2Fresources%2Fhello-stag.png)
+![hello-prod.png](src%2Fmain%2Fresources%2Fhello-prod.png)
+
+The application port is set to 8080 and the container port is mapped to the host port 8080 for the STAGING environment and 8081 for the PRODUCTION environment.

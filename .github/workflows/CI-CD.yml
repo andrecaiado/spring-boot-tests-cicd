@@ -142,15 +142,15 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Set permissions for private key
         run: |
-          echo "${{ secrets.AWS_EC2_PRIVATE_KEY }}" > key.pem
+          echo "${{ secrets.`AWS_EC2_PRIVATE_KEY }}" > key.pem
           chmod 600 key.pem
       - name: Pull Docker image
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_IPADDRESS }} 'sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.outputs.tag_version }}'
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.AWS_EC2_USERNAME }}@${{ secrets.AWS_EC2_IPADDRESS }} 'sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.outputs.tag_version }}'
       - name: Stop running container
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_IPADDRESS }} 'sudo docker stop spring-boot-tests-cicd-${{ needs.prepare.outputs.environment }} || true'
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_IPADDRESS }} 'sudo docker rm spring-boot-tests-cicd-${{ needs.prepare.outputs.environment }} || true'
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.AWS_EC2_USERNAME }}@${{ secrets.AWS_EC2_IPADDRESS }} 'sudo docker stop spring-boot-tests-cicd-${{ needs.prepare.outputs.environment }} || true'
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.AWS_EC2_USERNAME }}@${{ secrets.AWS_EC2_IPADDRESS }} 'sudo docker rm spring-boot-tests-cicd-${{ needs.prepare.outputs.environment }} || true'
       - name: Run new container
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_IPADDRESS }} 'sudo docker run -d --env APP_ENV=${{ needs.prepare.outputs.environment }} --name spring-boot-tests-cicd-${{ needs.prepare.outputs.environment }} -p ${{ needs.prepare.outputs.port }}:8080 ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.outputs.tag_version }}'
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.AWS_EC2_USERNAME }}@${{ secrets.AWS_EC2_IPADDRESS }} 'sudo docker run -d --env APP_ENV=${{ needs.prepare.outputs.environment }} --name spring-boot-tests-cicd-${{ needs.prepare.outputs.environment }} -p ${{ needs.prepare.outputs.port }}:8080 ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.outputs.tag_version }}'
