@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,9 +30,12 @@ public class TutorialController {
   @Autowired
   TutorialRepository tutorialRepository;
 
+  @Value("${app.environment}")
+  private String environment;
+
   @GetMapping("/greeting")
   public String greeting() {
-      return "Hello, World";
+      return "Hello World from " + environment + " environment";
   }
 
   @GetMapping("/tutorials")
