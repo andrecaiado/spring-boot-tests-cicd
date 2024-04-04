@@ -147,7 +147,7 @@ jobs:
       - name: Stop running container
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@52.56.61.209 'sudo docker stop spring-boot-tests-cicd || true'
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@y52.56.61.209 'sudo docker rm spring-boot-tests-cicd || true'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@52.56.61.209 'sudo docker rm spring-boot-tests-cicd || true'
       - name: Run new container
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@52.56.61.209 'sudo docker run -d --name spring-boot-tests-cicd -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ needs.prepare.outputs.tag_version }}'
