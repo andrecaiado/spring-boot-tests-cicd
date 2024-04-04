@@ -84,4 +84,4 @@ The application will load the environment variable and use the value in the `/ap
 ![hello-stag.png](src%2Fmain%2Fresources%2Fhello-stag.png)
 ![hello-prod.png](src%2Fmain%2Fresources%2Fhello-prod.png)
 
-The application port is set to 8080 and the container port is mapped to the host port 8080 for the STAGING environment and 8081 for the PRODUCTION environment.
+The application port is set to `8080` and the container port is mapped to the host port `8080` for the STAGING environment and `8081` for the PRODUCTION environment.
